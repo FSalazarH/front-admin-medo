@@ -170,7 +170,7 @@ class Designers extends Component{
                                 <Modal.Title> Crear Diseñador </Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-								<CreateParams url="designers" check={['name','web','description']}targetImage={{name:"name",url:"static/Imagenes/designers/",paramsName:"image"}} name="Diseñador" image={true} forms={this.state.forms} />
+								<CreateParams url="designers" check={['name','web','description']}targetImage={{name:"name",url:"static/imagenes/designers/",paramsName:"image"}} name="Diseñador" image={true} forms={this.state.forms} />
                             </Modal.Body>
                            
                         </Modal>
