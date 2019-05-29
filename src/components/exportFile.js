@@ -34,7 +34,7 @@ class exportFile extends Component{
 			var config = { headers: { 'Content-Type': 'multipart/form-data' } };
 			
 			
-			axios.post('http://localhost:3001/upload',fd,config).then(res => {
+			axios.post('http://me-do.cl/backend/upload',fd,config).then(res => {
 				console.log(res);
 			});
 
@@ -46,7 +46,7 @@ class exportFile extends Component{
 				<input type="file" name="image" onChange={ this.handleChange} />
 				<button onClick={this.fileUploadHandler}> asd </button>
 
-				<form method='post' action='http://localhost:3001/upload' enctype='multipart/form-data'>
+				<form method='post' action='http://me-do.cl/backend/upload' enctype='multipart/form-data'>
 				<input type='file' name='image'/>
 				<input type='submit' />
 			</form>

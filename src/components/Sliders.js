@@ -15,7 +15,7 @@ class Sliders extends Component{
 		// check if user logged in
         //"http://me-do.cl/backend/api/images/
 
-        var slidersRequest  =   axios.get('http://localhost:3001/api/slider_images');
+        var slidersRequest  =   axios.get('http://me-do.cl/backend/api/slider_images');
         
         //then all request save results in state
          Promise.all([slidersRequest]).then((results) => {
@@ -71,7 +71,7 @@ class Sliders extends Component{
 
         /*
         var id = this.state.collectionsImages[this.state.target].id;
-        axios.delete('http://localhost:3001/api/collections/'+ id.toString(), { data: {} }
+        axios.delete('http://me-do.cl/backend/api/collections/'+ id.toString(), { data: {} }
         ).then(res => {
             console.log("result ",res);
             this.setState({showConfirm:true});

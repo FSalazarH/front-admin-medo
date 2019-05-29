@@ -87,7 +87,7 @@ class CreateParams extends Component{
             
             //Create folder just targetimage.folder
             if(this.state.targetImage.folder){
-                axios.post('http://localhost:3001/createFolder',{url: targetImage.url+name},config).then(res => {
+                axios.post('http://me-do.cl/backend/createFolder',{url: targetImage.url+name},config).then(res => {
                     console.log(res);
                     console.log("Carpeta creada");
                 });    
@@ -99,7 +99,8 @@ class CreateParams extends Component{
 			fd.set('url', targetImage.url+name + '.png' )
 			var config = { headers: { 'Content-Type': 'multipart/form-data' } };
 			
-            axios.post('http://localhost:3001/upload',fd,config).then(res => {
+			axios.post('http://me-do.cl/backend/upload',fd,config).then(res => {
+				
 				if(res['data'] == "File uploaded!"){
                     console.log("Imagen creada");
 				}
@@ -120,7 +121,7 @@ class CreateParams extends Component{
         console.log("PARAMS: ",params);
 
         // create element in bd
-        axios.post('http://localhost:3001/api/' + this.state.url, params).then(res => {
+        axios.post('http://me-do.cl/backend/api/' + this.state.url, params).then(res => {
             console.log("result ",res);
             this.setState({showConfirm:true});
             window.location.reload(); 

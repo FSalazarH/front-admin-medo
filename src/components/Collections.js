@@ -14,8 +14,8 @@ class Collections extends Component{
         componentDidMount(){
             // "http://me-do.cl/backend/api/texts/"
     
-            var collectionsRequest  =   axios.get('http://localhost:3001/api/collections');
-            var designerRequest     =   axios.get('http://localhost:3001/api/designers');
+            var collectionsRequest  =   axios.get('http://me-do.cl/backend/api/collections');
+            var designerRequest     =   axios.get('http://me-do.cl/backend/api/designers');
 
             //then all request save results in state
             Promise.all([collectionsRequest, designerRequest ]).then((results) => {
@@ -76,7 +76,7 @@ class Collections extends Component{
 
             /*
             var id = this.state.collectionsImages[this.state.target].id;
-            axios.delete('http://localhost:3001/api/collections/'+ id.toString(), { data: {} }
+            axios.delete('http://me-do.cl/backend/api/collections/'+ id.toString(), { data: {} }
             ).then(res => {
                 console.log("result ",res);
                 this.setState({showConfirm:true});

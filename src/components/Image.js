@@ -45,7 +45,7 @@ class Image extends Component{
 			fd.set('url', this.state.uploadUrl)
 			var config = { headers: { 'Content-Type': 'multipart/form-data' } };
 			
-			axios.post('http://localhost:3001/upload',fd,config).then(res => {
+			axios.post('http://me-do.cl/backend/upload',fd,config).then(res => {
 				
 				if(res['data'] == "File uploaded!"){
 					this.setState({showConfirm:true});
@@ -63,7 +63,7 @@ class Image extends Component{
 			/*
 			var config = { headers: { 'Content-Type': 'application/json' } };
 			
-			axios.post('http://localhost:3001/createFolder',{url: '/media/images/collections/new-collection'},config).then(res => {
+			axios.post('http://me-do.cl/backend/createFolder',{url: '/media/images/collections/new-collection'},config).then(res => {
 				console.log(res);
 			});*/
 

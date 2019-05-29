@@ -14,7 +14,8 @@ class Login extends Component{
 	}
 
     handleClick(event) {
-		fetch("http://me-do.cl/backend/api/administrators/login?[include]=user",
+    //fetch("http://me-do.cl/backend/api/administrators/login?[include]=user",
+    fetch("http://me-do.cl/backend/api/administrators/login?[include]=user",
 			{
 			    method: "POST",
 			    body: JSON.stringify(this.state),

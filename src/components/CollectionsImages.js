@@ -11,7 +11,7 @@ class CollectionsImages extends Component{
     componentDidMount(){
         // "http://me-do.cl/backend/api/texts/"
         console.log(this.state.collection_id);
-        var paramsRequest  =   axios.get("http://localhost:3001/api/collections_images?filter[where][collection_id]=" + this.state.collectionsId);
+        var paramsRequest  =   axios.get("http://me-do.cl/backend/api/collections_images?filter[where][collection_id]=" + this.state.collectionsId);
 
         //then all request save results in state
         Promise.all([paramsRequest]).then((results) => {
@@ -61,7 +61,7 @@ class CollectionsImages extends Component{
     delete(){
         console.log("deleting!");
         var id = this.state.collectionsImages[this.state.target].id;
-        axios.delete('http://localhost:3001/api/collections_images/'+ id.toString(), { data: {} }
+        axios.delete('http://me-do.cl/backend/api/collections_images/'+ id.toString(), { data: {} }
         ).then(res => {
             console.log("result ",res);
             this.setState({showConfirm:true});

@@ -9,7 +9,7 @@ import SweetAlert from "react-bootstrap-sweetalert";
 
 class Designers extends Component{
 	componentDidMount(){	
-		axios.get('http://localhost:3001/api/designers').then(res => {
+		axios.get('http://me-do.cl/backend/api/designers').then(res => {
 			this.setState({designers:res.data,load:false})
 			console.log(res);
 		}) .catch(error => {
@@ -69,7 +69,7 @@ class Designers extends Component{
 
 		/*
 		var id = this.state.collectionsImages[this.state.target].id;
-		axios.delete('http://localhost:3001/api/collections/'+ id.toString(), { data: {} }
+		axios.delete('http://me-do.cl/backend/api/collections/'+ id.toString(), { data: {} }
 		).then(res => {
 			console.log("result ",res);
 			this.setState({showConfirm:true});

@@ -11,7 +11,7 @@ class CollectionsParams extends Component{
     componentDidMount(){
         // "http://me-do.cl/backend/api/texts/"
         console.log(this.state.collection_id);
-        var paramsRequest  =   axios.get("http://localhost:3001/api/collections_parameters?filter[where][collection_id]=" + this.state.collectionsId);
+        var paramsRequest  =   axios.get("http://me-do.cl/backend/api/collections_parameters?filter[where][collection_id]=" + this.state.collectionsId);
 
         //then all request save results in state
         Promise.all([paramsRequest]).then((results) => {
@@ -60,7 +60,7 @@ class CollectionsParams extends Component{
     delete(){
         console.log("deleting!");
         var id = this.state.collectionsParams[this.state.target].id;
-        axios.delete('http://localhost:3001/api/collections_parameters/'+ id.toString(), { data: {} }
+        axios.delete('http://me-do.cl/backend/api/collections_parameters/'+ id.toString(), { data: {} }
         ).then(res => {
             console.log("result ",res);
             this.setState({showConfirm:true});

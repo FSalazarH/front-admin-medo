@@ -53,7 +53,7 @@ class UpdateParams extends Component{
         }
 
         console.log("params ",params);
-        axios.patch('http://localhost:3001/api/' + this.props.url, params).then(res => {
+        axios.patch('http://me-do.cl/backend/api/' + this.props.url, params).then(res => {
             console.log("result ",res);
             //alert("Cambios guardados correctamente");
             this.setState({show:true});
