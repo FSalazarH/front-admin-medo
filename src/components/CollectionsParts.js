@@ -111,10 +111,10 @@ class CollectionsParts extends Component{
                                                     this.setState({target:i},function() {this.handleParams()}  ) ; 
                                                 }}
                                         
-                                        > <i class="fas fa-edit"></i> Editar </Button>
+                                        > <i className="fas fa-edit"></i> Editar </Button>
                                         <Button variant="outline-danger"  
                                         onClick={() => { this.setState({target:i},function() {this.setState({showDelete:true})}  ) ;}}
-                                                > <i class="fas fa-trash"></i>   Eliminar </Button>
+                                                > <i className="fas fa-trash"></i>   Eliminar </Button>
                                     </ButtonGroup>
                                     <br/>  
                                 </Col>
@@ -141,7 +141,7 @@ class CollectionsParts extends Component{
                                         </Breadcrumb>
                                     </Col> 
                                     <Col  xs={4} md={4} lg={4}>  
-                                        <Button  onClick={this.handleShow2} variant="outline-success" size="lg"> <i class="fas fa-plus-circle "></i> Crear Parte </Button>
+                                        <Button  onClick={this.handleShow2} variant="outline-success" size="lg"> <i className="fas fa-plus-circle "></i> Crear Parte </Button>
                                     </Col> 
                                 </Row>
                                 <Row>
@@ -156,7 +156,7 @@ class CollectionsParts extends Component{
                                     <Modal.Title> Editar Collección </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
-                                    <UpdateParams url="collections_parts" required={required} params={this.state.params}  forms={this.state.forms} />
+                                    <UpdateParams url="collections_parts" required={required} check={['shapediver_id','name_es','name_en','name_it']} params={this.state.params}  forms={this.state.forms} />
                                 </Modal.Body>
                             
                             </Modal>

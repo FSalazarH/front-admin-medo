@@ -9,7 +9,6 @@ import SweetAlert from "react-bootstrap-sweetalert";
 class CollectionsParams extends Component{
 
     componentDidMount(){
-        // "http://me-do.cl/backend/api/texts/"
         console.log(this.state.collection_id);
         var paramsRequest  =   axios.get("http://me-do.cl/backend/api/collections_parameters?filter[where][collection_id]=" + this.state.collectionsId);
 
@@ -108,10 +107,10 @@ class CollectionsParams extends Component{
                                                     this.setState({target:i},function() {this.handleParams()}  ) ; 
                                                 }}
                                         
-                                        > <i class="fas fa-edit"></i> Editar </Button>
+                                        > <i className="fas fa-edit"></i> Editar </Button>
                                         <Button variant="outline-danger"  
                                         onClick={() => { this.setState({target:i},function() {this.setState({showDelete:true})}  ) ;}}
-                                                > <i class="fas fa-trash"></i>   Eliminar </Button>
+                                                > <i className="fas fa-trash"></i>   Eliminar </Button>
                                     </ButtonGroup>
                                     <br/>  
                                 </Col>
@@ -132,7 +131,7 @@ class CollectionsParams extends Component{
                                         </Breadcrumb>
                                     </Col> 
                                     <Col  xs={4} md={4} lg={4}>  
-                                        <Button  onClick={this.handleShow2} variant="outline-success" size="lg"> <i class="fas fa-plus-circle "></i> Crear Parametro </Button>
+                                        <Button  onClick={this.handleShow2} variant="outline-success" size="lg"> <i className="fas fa-plus-circle "></i> Crear Parametro </Button>
                                     </Col> 
                                 </Row>
                                 <Row>
@@ -147,7 +146,7 @@ class CollectionsParams extends Component{
                                     <Modal.Title> Editar Collección </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
-                                    <UpdateParams url="collections_parameters" params={this.state.params}  forms={this.state.forms} />
+                                    <UpdateParams url="collections_parameters" params={this.state.params}  check={['shapediver_id','name_es','name_en','name_it']} forms={this.state.forms} />
                                 </Modal.Body>
                             
                             </Modal>
@@ -155,7 +154,7 @@ class CollectionsParams extends Component{
                             {/* Modal create collection  */}
                             <Modal  size="lg" show={this.state.show2} onHide={this.handleClose2}>
                                 <Modal.Header closeButton>
-                                    <Modal.Title> Crear Collección </Modal.Title>
+                                    <Modal.Title> Crear parametro de la Collección </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
                                     <CreateParams url="collections_parameters" required={[{'name':'collection_id','parameter':this.state.collectionsId}]} check={['shapediver_id','name_es','name_en','name_it']} name="Parametros" forms={this.state.forms} />

@@ -2,26 +2,24 @@ import React, {Component } from 'react';
 import {Spinner, Breadcrumb ,Modal,Container, ButtonGroup, Button, Row, Col, Card } from 'react-bootstrap';
 import SideBar from './SideBar';
 import axios from 'axios';
-import Image from './Image';
 import UpdateParams from './UpdateParams';
 import CreateParams from './CreateParams';
 import SweetAlert from "react-bootstrap-sweetalert";
 
-class Sliders extends Component{
+class Terms extends Component{
 
 
 	componentDidMount(){
 
 		// check if user logged in
+        //"http://me-do.cl/backend/api/images/
 
-        var urlServer = "http://me-do.cl/backend/";
-        //var urlServer = "http://localhost:3001/";
-        var slidersRequest  =   axios.get( urlServer+'api/slider_images');
+        var collectionsRequest  =   axios.get('http://me-do.cl/backend/api/terms_texts');
         
         //then all request save results in state
-         Promise.all([slidersRequest]).then((results) => {
+         Promise.all([collectionsRequest]).then((results) => {
             console.log(results);
-            this.setState({sliders:results[0]['data'].reverse(),load:false });
+            this.setState({collections:results[0]['data'].reverse(),load:false });
           })
           .catch(error => {
               console.log(error);
@@ -33,12 +31,12 @@ class Sliders extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
-            sliders:[],
+            collections:[],
             load: true,
             show:false,
             show2:false,
             handleClose:false,
-            forms:{"text_en":"Texto EN","text_es":"Texto ES","text_it":"Texto IT"},
+            forms:{"key":"Identificador", "name_es":"Nombre ES",  "name_en":"Nombre EN",  "name_it":"Nombre IT", "text_en":"Texto EN","text_es":"Texto ES","text_it":"Texto IT"},
             params:{},
             target:0,
             showDelete:false,showError:false,showConfirm:false
@@ -61,7 +59,7 @@ class Sliders extends Component{
     
     handleParams(){
         var t = this.state.target;
-        this.setState({params:this.state.sliders[t]});
+        this.setState({params:this.state.collections[t]});
         this.handleShow()
     }
     saveChanges(){
@@ -70,24 +68,18 @@ class Sliders extends Component{
     delete(){
         console.log("deleting!");
 
-        var listRequest = [];
-        console.log(this.state);
-        var id = this.state.sliders[this.state.target].id;
-        var urlServer = "http://me-do.cl/backend/";
-        //var urlServer = "http://localhost:3001/";
-
-        var config = {'content-type': 'application/json'};
-        listRequest.push(axios.delete(urlServer + "api/slider_images/"+ id.toString(), { data: {} }));
-        listRequest.push(axios.post(urlServer+ "deleteFolder",{url: this.state.sliders[this.state.target].image},config));
-       
-        console.log(listRequest);
-        Promise.all(listRequest).then((res) => {
+        var id = this.state.collections[this.state.target].id;
+        axios.delete('http://me-do.cl/backend/api/terms_texts/'+ id.toString(), { data: {} }
+        ).then(res => {
             console.log("result ",res);
             this.setState({showConfirm:true});
             window.location.reload(); 
-
-         }).catch(() => { console.log('failed!'); this.setState({showError:true}); });      
-
+        }) .catch(error => {
+            console.log(error);
+            this.setState({showError:true});
+          return Promise.reject(error);
+      });;
+      
 
        
     }
@@ -103,9 +95,9 @@ class Sliders extends Component{
 
 		}else{
 
-            var required = [{'name':'slider_id','parameter':0}];
+            var check = ["key", "name_es",  "name_en",  "name_it", "text_en","text_es","text_it"];
 
-            var listSliders = this.state.sliders.map((element,i) => {
+            var listcollections = this.state.collections.map((element,i) => {
 
                 var params = element;
                 //var urlserver = "http://localhost:8080";
@@ -118,16 +110,16 @@ class Sliders extends Component{
                                 <Col  xs={8} md={8} lg={8}>
                                     <Card>
                                         
-                                        <Card.Header>{element.slug} </Card.Header>
+                                        <Card.Header>{element.key} </Card.Header>
                                         <Card.Body>
-                                            <Image size={"400"} getUrl={urlserver   + element.image} uploadUrl={element.image }   />
+                                        {element.name_es} 
                                         </Card.Body>
                                     </Card>
                                     <br/>
+
                                 </Col  >
                             
-                                <Col xs={4} md={4} lg={4}>
-                                    <br/>   <br/>   
+                                <Col xs={4} md={4} lg={4}>  
                                     <ButtonGroup vertical>
                                         <Button variant="outline-primary" 
                                                 onClick={() => { 
@@ -135,7 +127,7 @@ class Sliders extends Component{
                                                 }}
                                         
                                         > <i className="fas fa-edit"></i> Editar </Button>
-                                        <Button variant="outline-danger"  
+                                       <Button variant="outline-danger"  
                                                          onClick={() => { this.setState({target:i},function() {this.setState({showDelete:true})}  ) ;}}
                                                     > <i className="fas fa-trash"></i>   Eliminar </Button>
                                     </ButtonGroup>
@@ -156,7 +148,7 @@ class Sliders extends Component{
                         <Row >
                             <Col  xs={8} md={8} lg={8}> 
                                 <Breadcrumb>
-                                <Breadcrumb.Item active> Inicio </Breadcrumb.Item>
+                                <Breadcrumb.Item active> Terminos y Condiciones </Breadcrumb.Item>
                                 </Breadcrumb>
                             </Col> 
                             <Col  xs={4} md={4} lg={4}>  
@@ -164,29 +156,29 @@ class Sliders extends Component{
                             </Col> 
                         </Row>
                         <Row>
-                            {listSliders}
+                            {listcollections}
                         </Row>
 
                     </Container> 
 
-                    {/* Modal edit Slider  */}
+                    {/* Modal edit collection  */}
                     <Modal  size="lg" show={this.state.show} onHide={this.handleClose}>
                         <Modal.Header closeButton>
-                            <Modal.Title> Editar Collección </Modal.Title>
+                            <Modal.Title> Editar elemento</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <UpdateParams url="slider_images"  params={this.state.params} forms={this.state.forms} check={["text_en","text_es","text_it"]} />
+                            <UpdateParams url="terms_texts" check={check} params={this.state.params} forms={this.state.forms} />
                         </Modal.Body>
                        
                     </Modal>
 
-                    {/* Modal create Slider  */}
+                    {/* Modal create collection  */}
                     <Modal  size="lg" show={this.state.show2} onHide={this.handleClose2}>
                         <Modal.Header closeButton>
-                            <Modal.Title> Crear Collección </Modal.Title>
+                            <Modal.Title> Crear elemento </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <CreateParams url="slider_images" required={required} targetImage={{"name":"id","paramsName":"image","url":"/static/imagenes/home/"}} check={["text_en","text_es","text_it"]} name="Slider" forms={this.state.forms} />
+                            <CreateParams url="terms_texts" check={check} name="Terminos y condiciones" forms={this.state.forms} />
                         </Modal.Body> 
                        
                     </Modal>
@@ -203,7 +195,7 @@ class Sliders extends Component{
                         onCancel={this.hideAlert}
                         show={this.state.showDelete}
                     >
-                        Una vez borrado no podras recuperar el slider.
+                        Una vez borrado no podras recuperar el elemento
                     </SweetAlert>
 
                     {/* Sweet alert success changes  */}
@@ -236,4 +228,4 @@ class Sliders extends Component{
 }
 
 
-export default Sliders;
+export default Terms;

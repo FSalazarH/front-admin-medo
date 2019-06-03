@@ -9,9 +9,10 @@ import Image from './Image';
 class CollectionsImages extends Component{
 
     componentDidMount(){
-        // "http://me-do.cl/backend/api/texts/"
-        console.log(this.state.collection_id);
-        var paramsRequest  =   axios.get("http://me-do.cl/backend/api/collections_images?filter[where][collection_id]=" + this.state.collectionsId);
+
+        var urlServer = "http://me-do.cl/backend/";
+        //var urlServer = "http://localhost:3001/";
+        var paramsRequest  =   axios.get( urlServer + "api/collections_images?filter[where][collection_id]=" + this.state.collectionsId);
 
         //then all request save results in state
         Promise.all([paramsRequest]).then((results) => {
@@ -60,18 +61,28 @@ class CollectionsImages extends Component{
     }
     delete(){
         console.log("deleting!");
+
+        var listRequest = [];
         var id = this.state.collectionsImages[this.state.target].id;
-        axios.delete('http://me-do.cl/backend/api/collections_images/'+ id.toString(), { data: {} }
-        ).then(res => {
+        var urlServer = "http://me-do.cl/backend/";
+        //var urlServer = "http://localhost:3001/";
+
+        var config = {'content-type': 'application/json'};
+        listRequest.push(axios.delete(urlServer + "api/collections_images/"+ id.toString(), { data: {} }));
+        listRequest.push(axios.post(urlServer+ "deleteFolder",{url: "/media/images/collections/"+ this.state.collectionsId.toString() + "/" + id.toString() + ".png"},config));
+       
+       
+        console.log(listRequest);
+        Promise.all(listRequest).then((res) => {
             console.log("result ",res);
             this.setState({showConfirm:true});
             window.location.reload(); 
-        }) .catch(error => {
-            console.log(error);
-            this.setState({showError:true});
-          return Promise.reject(error);
-      });;
-       
+
+         }).catch((error) => { console.log('failed!',error); this.setState({showError:true}); });      
+
+
+
+      // Delete image
     }
 
     hideAlert(){
@@ -87,6 +98,7 @@ class CollectionsImages extends Component{
 
             }else{
 
+                //var urlServer = "http://localhost:3001/";
                 var urlserver = "https://me-do.cl/";
                 var listCollecion = this.state.collectionsImages.map((element,i) => {
                     return( 
@@ -110,10 +122,10 @@ class CollectionsImages extends Component{
                                                     this.setState({target:i},function() {this.handleParams()}  ) ; 
                                                 }}
                                         
-                                        > <i class="fas fa-edit"></i> Editar </Button>
+                                        > <i className="fas fa-edit"></i> Editar </Button>
                                         <Button variant="outline-danger"  
                                         onClick={() => { this.setState({target:i},function() {this.setState({showDelete:true})}  ) ;}}
-                                                > <i class="fas fa-trash"></i>   Eliminar </Button>
+                                                > <i className="fas fa-trash"></i>   Eliminar </Button>
                                     </ButtonGroup>
                                     <br/>  
                                 </Col>
@@ -125,7 +137,7 @@ class CollectionsImages extends Component{
                 var required = [
                         {'name':'collection_id','parameter':this.state.collectionsId}
                     ]
-                var urlTarget = "/media/images/collections/" + this.state.collectionsSlug + "/" + this.state.collectionsSlug;
+                var urlTarget = "/media/images/collections/" + this.state.collectionsId + "/";
 
                 return(	<div className="wrapper">
                             <SideBar/>
@@ -139,7 +151,7 @@ class CollectionsImages extends Component{
                                         </Breadcrumb>
                                     </Col> 
                                     <Col  xs={4} md={4} lg={4}>  
-                                        <Button  onClick={this.handleShow2} variant="outline-success" size="lg"> <i class="fas fa-plus-circle "></i> Crear Parte </Button>
+                                        <Button  onClick={this.handleShow2} variant="outline-success" size="lg"> <i className="fas fa-plus-circle "></i> Crear Imagen </Button>
                                     </Col> 
                                 </Row>
                                 <Row>
@@ -154,7 +166,7 @@ class CollectionsImages extends Component{
                                     <Modal.Title> Editar Collección </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
-                                    <UpdateParams url="collections_images" required={required} params={this.state.params}  forms={this.state.forms} />
+                                    <UpdateParams url="collections_images" required={required} params={this.state.params} check={['order']} forms={this.state.forms} />
                                 </Modal.Body>
                             
                             </Modal>
@@ -162,10 +174,10 @@ class CollectionsImages extends Component{
                             {/* Modal create collection  */}
                             <Modal  size="lg" show={this.state.show2} onHide={this.handleClose2}>
                                 <Modal.Header closeButton>
-                                    <Modal.Title> Crear una Parte de la Collección </Modal.Title>
+                                    <Modal.Title> Crear una Imagen de la Collección </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
-                                    <CreateParams url="collections_images" targetImage={{"name":"order","url":urlTarget,paramsName:"file"}} required={required} check={['order']} name="Imagenes" image={true} forms={this.state.forms} />
+                                    <CreateParams url="collections_images" targetImage={{"name":"id","url":urlTarget,paramsName:"file"}} required={required} check={['order']} name="Imagenes" image={true} forms={this.state.forms} />
                                 </Modal.Body>
                             
                             </Modal>

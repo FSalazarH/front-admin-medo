@@ -9,8 +9,10 @@ import SweetAlert from "react-bootstrap-sweetalert";
 
 class Designers extends Component{
 	componentDidMount(){	
-		axios.get('http://me-do.cl/backend/api/designers').then(res => {
-			this.setState({designers:res.data,load:false})
+		//var urlServer = "http://localhost:3001/";
+        var urlServer = "http://me-do.cl/backend/";
+		axios.get(urlServer + 'api/designers').then(res => {
+			this.setState({designers:res.data.reverse(),load:false})
 			console.log(res);
 		}) .catch(error => {
 			  console.log(error);
@@ -39,7 +41,7 @@ class Designers extends Component{
 		this.handleClose2 = this.handleClose2.bind(this);
 		this.handleParams = this.handleParams.bind(this);
 		this.hideAlert = this.hideAlert.bind(this);
-
+		this.delete = this.delete.bind(this);
 	}
 
 	handleClose() {
@@ -67,21 +69,22 @@ class Designers extends Component{
 	delete(){
 		console.log("deleting!");
 
-		/*
-		var id = this.state.collectionsImages[this.state.target].id;
-		axios.delete('http://me-do.cl/backend/api/collections/'+ id.toString(), { data: {} }
-		).then(res => {
-			console.log("result ",res);
-			this.setState({showConfirm:true});
-			window.location.reload(); 
-		}) .catch(error => {
-			console.log(error);
-			this.setState({showError:true});
-		  return Promise.reject(error);
-	  });;
+        var listRequest = [];
+		var id = this.state.designers[this.state.target].id;
+		//var urlServer = "http://localhost:3001/";
+        var urlServer = "http://me-do.cl/backend/";
+		
+		var config = {'content-type': 'application/json'};
+        listRequest.push(axios.delete(urlServer + "api/designers/"+ id.toString(), { data: {} }));
+        listRequest.push(axios.post(urlServer+ "deleteFolder",{url: this.state.designers[this.state.target].image},config));
+       
+		Promise.all(listRequest).then((res) => {
+            console.log("result ",res);
+            this.setState({showConfirm:true});
+            window.location.reload(); 
+
+         }).catch(() => { console.log('failed!'); this.setState({showError:true}); });      
 	  
-	  // Delete folder
-	  */
 	   
 	}
 
@@ -108,7 +111,7 @@ class Designers extends Component{
 								<Col  xs={8} md={8} lg={8}>
 									<Card>
 										
-										<Card.Header>{element.slug} </Card.Header>
+										<Card.Header>{element.name} </Card.Header>
 										<Card.Body>
 											<Image size={"300"} getUrl={urlserver   + element.image} uploadUrl={element.image }   />
 										</Card.Body>
@@ -124,8 +127,10 @@ class Designers extends Component{
 													this.setState({target:i},function() {this.handleParams()}  ) ; 
 												}}
 										
-										> <i class="fas fa-edit"></i> Editar </Button>
-										<Button variant="outline-danger"> <i class="fas fa-trash"></i>   Eliminar </Button>
+										> <i className="fas fa-edit"></i> Editar </Button>
+										  <Button variant="outline-danger"  
+                                                         onClick={() => { this.setState({target:i},function() {this.setState({showDelete:true})}  ) ;}}
+                                                    > <i className="fas fa-trash"></i>   Eliminar </Button>
 									</ButtonGroup>
 								</Col>
 							</Row>
@@ -145,7 +150,7 @@ class Designers extends Component{
                                     </Breadcrumb>
                                 </Col> 
                                 <Col  xs={4} md={4} lg={4}>  
-                                    <Button  onClick={this.handleShow2} variant="outline-success" size="lg"> <i class="fas fa-plus-circle "></i> Crear Diseñador </Button>
+                                    <Button  onClick={this.handleShow2} variant="outline-success" size="lg"> <i className="fas fa-plus-circle "></i> Crear Diseñador </Button>
                                 </Col> 
                             </Row>
 							<Row>
@@ -156,7 +161,7 @@ class Designers extends Component{
 						
                         <Modal  size="lg" show={this.state.show} onHide={this.handleClose}>
                             <Modal.Header closeButton>
-                                <Modal.Title> Editar Collección </Modal.Title>
+                                <Modal.Title> Editar Diseñador </Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
                                 <UpdateParams  url="designers" params={this.state.params} forms={this.state.forms}  />
@@ -170,7 +175,7 @@ class Designers extends Component{
                                 <Modal.Title> Crear Diseñador </Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-								<CreateParams url="designers" check={['name','web','description']}targetImage={{name:"name",url:"static/imagenes/designers/",paramsName:"image"}} name="Diseñador" image={true} forms={this.state.forms} />
+								<CreateParams url="designers" check={['name','web','description']} targetImage={{name:"id",url:"static/imagenes/designers/",paramsName:"image"}} name="Diseñador" image={true} forms={this.state.forms} />
                             </Modal.Body>
                            
                         </Modal>

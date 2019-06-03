@@ -27,14 +27,14 @@ class SideNav extends Component{
 			var element = Views[key];
 			if(route == key){
 				return(
-					<li className="active">
+					<li key={key} className="active">
 						<a  href={key}>{element}	</a>
 					</li>
 	
 				)
 			}else{
 				return(
-					<li>
+					<li key={key}>
 						<a href={key}>{element}	</a>
 					</li>
 	

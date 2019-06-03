@@ -10,6 +10,8 @@ import CollectionsParams from './CollectionsParams';
 import CollectionsImages from './CollectionsImages';
 import Sliders from './Sliders';
 import Designers from './Designers';
+import Terms from './Terms';
+import Freq from './Freq';
 import '.././App.css'; 
 
 
@@ -29,13 +31,15 @@ const Main = () => (
 					<Route path="/:view/text" component={Text} />
 					<Route path="/:view/images" component={Images} />
 					<Route exact path="/home" component={Sliders} />
+					<Route exact path="/Terms" component={Terms} />
+					<Route exact path="/Freq" component={Freq} />
 
 					<Route exact path="/about" render={() => (<Redirect to="/About/text"/>)} />
 					<Route exact path="/service" render={() => (<Redirect to="/Service/text"/>)} />
 					<Route exact path="/contact" render={() => (<Redirect to="/Contact/text"/>)} />
 					<Route exact path="/base" render={() => (<Redirect to="/Base/text"/>)} />
 					<Route exact path="/freq" render={() => (<Redirect to="/Freq/text"/>)} />
-					<Route exact path="/Terms" render={() => (<Redirect to="/Terms/text"/>)} />
+					
 
 				</Switch>
 				

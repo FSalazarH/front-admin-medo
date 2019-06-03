@@ -1,6 +1,6 @@
 import SideBar from './SideBar';
 import React, {Component } from 'react';
-import {Spinner, Breadcrumb ,Container,Table, Button, Row,Form, Col } from 'react-bootstrap';
+import {Checkbox, Button, Row,Form, Col } from 'react-bootstrap';
 import axios from 'axios';
 import SweetAlert from "react-bootstrap-sweetalert";
 
@@ -14,9 +14,11 @@ class UpdateParams extends Component{
             select: this.props.select,
             targetName:this.props.target,
             targetId:0,
-            show:false,
-            showError:false,
-            required:this.props.required
+            show:false, showError:false,showCheck:false,
+            checkParameter:"",
+            check:this.props.check,
+            required:this.props.required,
+            active:false,home:false
         };
         this.saveChanges = this.saveChanges.bind(this);
         this.hideAlert = this.hideAlert.bind(this);
@@ -26,15 +28,51 @@ class UpdateParams extends Component{
             var state = this.state;
             state.targetId = state.params[targetName];
         }
+
+        if(this.state.params['active'] != undefined){
+            var state=this.state;
+            if(this.state.params.active == 1){
+                state.active = true;
+            }
+            if(this.state.params.home == 1){
+                state.home = true;
+            }
+        }
+
+
        
     }
 
     hideAlert(){
-        this.setState({show:false,showError:false});
+        this.setState({show:false,showError:false,showCheck:false});
     }
 
+    
     saveChanges(){
         var params = this.state.params;
+
+        
+        if(params['active'] != undefined){
+            if(this.state.active){
+                params['active']=1;
+            }else{
+                params['active']=0;
+            }
+            if(this.state.home){
+                params['home']=1;
+            }else{
+                params['home']=0;
+            }
+        }
+
+
+        console.log(params);
+
+        
+        //Check params
+        if(!this.check()){
+            return;
+        }
 
         //If select set parameters
         if(this.state.select){
@@ -62,26 +100,84 @@ class UpdateParams extends Component{
             this.setState({showError:true});
           return Promise.reject(error);
       });
+      
+    }
+
+    check(){
+        var checkList = this.state.check;
+        var forms = this.state.forms;
+        var params = this.state.params;
+
+        for(var i=0;i<checkList.length;i++){
+            var atribute = checkList[i];
+            if(!params[atribute]){
+                this.setState({checkParameter:forms[atribute],showCheck:true});
+                return(false);
+            }
+        }
+
+        return(true);
     }
         
-        render (){
+    render (){
             var forms = this.state.forms;
             var keys= Object.keys(forms);
             var params = this.state.params;
             var listForms = keys.map((element,i) => {
+                
+                var formText;
+                if(element.indexOf("description") != -1 ||  element.indexOf("text") != -1){
+                    formText =  <Form.Control as="textarea" rows="2"
+                                    onChange = {(event) => {
+                                        params[element] = event.target.value;
+                                        this.setState({params:params});
+
+                                    }}  
+                                    defaultValue={params[element]}  />
+                                 
+                }else if(element == 'active'){
+                    formText =   
+                            <div 
+                                key={element}  
+                                onChange = {(event) => {this.setState({active:!this.state.active});}}      
+                                className="mb-3">
+                                    <Form.Check 
+                                        checked={this.state.active}
+                                        type={'checkbox'}
+                                        id={element}
+                                        label={ forms[element]}
+                                    />
+                             </div>                              
+                }else if(element == 'home'){ 
+                    formText =   
+                    <div 
+                        key={element}  
+                        onChange = {(event) => {this.setState({home:!this.state.home});}}    
+                        className="mb-3">
+                            <Form.Check 
+                                type={'checkbox'}
+                                id={element}
+                                label={ forms[element]}
+                                checked={this.state.home}
+                            />
+                     </div>
+                }else{
+                    formText =  <Form.Control 
+                                    onChange = {(event) => {
+                                        params[element] = event.target.value;
+                                        this.setState({params:params});
+
+                                    }}  
+                                    defaultValue={params[element]}  />
+                }
+
                 return( 
                     <Form.Group as={Row} controlId="formPlaintextEmail">
                         <Form.Label column sm="2">
                             {forms[element]}
                         </Form.Label>
                         <Col sm="10">
-                            <Form.Control 
-                                onChange = {(event) => {
-                                    params[element] = event.target.value;
-                                    this.setState({params:params});
-    
-                                }}  
-                                defaultValue={params[element]}  />
+                            {formText}
                         </Col>
                     </Form.Group>
                     
@@ -134,6 +230,16 @@ class UpdateParams extends Component{
                         title="A ocurrido un error :(" 
                         onConfirm={this.hideAlert} 
                         closeOnClickOutside={true}>
+                    </SweetAlert>
+
+                    {/* Sweet check */}
+                    <SweetAlert 
+                        show={this.state.showCheck } 
+                        warning
+                        title="" 
+                        onConfirm={this.hideAlert} 
+                        closeOnClickOutside={true}>
+							El atributo "{this.state.checkParameter}"" no puede estar vacio
                     </SweetAlert>
 
             </Form>

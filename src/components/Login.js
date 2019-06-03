@@ -1,5 +1,5 @@
 import React, {Component } from 'react';
-
+import SweetAlert from "react-bootstrap-sweetalert";
 
 class Login extends Component{
 
@@ -7,9 +7,11 @@ class Login extends Component{
 		super(props);
 		this.state = {
             email:"",
-            password:""
+            password:"",
+            showInvalid:false, showError:false
         }
         this.handleClick = this.handleClick.bind(this);
+        this.hideAlert = this.hideAlert.bind(this);
 
 	}
 
@@ -39,7 +41,7 @@ class Login extends Component{
 				this.props.history.push('text/Home');
 			}else{
 				console.log("no logeado?");
-				alert("Los datos ingresados no son validos");
+				this.setState({showInvalid:true});
 
 
 			}
@@ -47,9 +49,15 @@ class Login extends Component{
 
 			} 
 		)
-		.catch(error => alert('Error al intentar conectar con el servidor.', 1500, 'red') ); 
+		.catch(error => 	this.setState({showError:true}) ); 
 		console.log("asd");
     }
+
+    
+    hideAlert(){
+        this.setState({showInvalid:false,showError:false});
+    }
+
     
 
 	render(){
@@ -78,7 +86,32 @@ class Login extends Component{
                 <div>
                         <button onClick={this.handleClick} className="btn btn-success btn-block"> Iniciar Sesión</button>
                     </div>
+
+                    
+                    {/* Sweet Invalid */}
+                    <SweetAlert 
+                        show={this.state.showInvalid } 
+                        warning
+                        title="Datos Invalidos." 
+                        onConfirm={this.hideAlert} 
+                        closeOnClickOutside={true}>
+							Los datos ingresados no son validos.
+                    </SweetAlert>
+
+                     {/* Sweet alert error */}
+                     <SweetAlert 
+                     show={this.state.showError } 
+                     danger 
+                     title="A ocurrido un error :(" 
+                     onConfirm={this.hideAlert} 
+                     closeOnClickOutside={true}>
+                          </SweetAlert>
             </div>
+
+            
+
+
+
 		)
 
 

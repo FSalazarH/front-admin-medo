@@ -20,7 +20,9 @@ class CreateParams extends Component{
             check: this.props.check,
             url: this.props.url,
             required: this.props.required,
-            showError:false,showConfirm:false,showInvalid:false
+            showError:false,showConfirm:false,showInvalid:false,showCheck:false,
+            checkParameter:"",
+            active:false,home:false
         };
         this.saveChanges = this.saveChanges.bind(this);
         this.check = this.check.bind(this);
@@ -47,7 +49,7 @@ class CreateParams extends Component{
         for(var i=0;i<checkList.length;i++){
             var atribute = checkList[i];
             if(!params[atribute]){
-                alert("El atributo " + forms[atribute] + " no puede estar vacio");
+                this.setState({checkParameter:forms[atribute],showCheck:true});
                 return(false);
             }
         }
@@ -77,39 +79,33 @@ class CreateParams extends Component{
         }
 
         var params = this.state.params;
-        
-        //If image in form
-        if(this.state.targetImage){
-            
-            //params give name to folder and image
-            var targetImage = this.state.targetImage;
-            var name = params[targetImage.name];
-            
-            //Create folder just targetimage.folder
-            if(this.state.targetImage.folder){
-                axios.post('http://me-do.cl/backend/createFolder',{url: targetImage.url+name},config).then(res => {
-                    console.log(res);
-                    console.log("Carpeta creada");
-                });    
+
+        if(params['active'] != undefined){
+            if(this.state.active){
+                params['active']=1;
+            }else{
+                params['active']=0;
             }
-           
-            //Create image
-            const fd = new FormData();
-			fd.append('image',this.state.file, this.state.file.name);
-			fd.set('url', targetImage.url+name + '.png' )
-			var config = { headers: { 'Content-Type': 'multipart/form-data' } };
-			
-			axios.post('http://me-do.cl/backend/upload',fd,config).then(res => {
-				
-				if(res['data'] == "File uploaded!"){
-                    console.log("Imagen creada");
-				}
-            }); 
-            
-            params[targetImage.paramsName] = targetImage.url+name + '.png';
+            if(this.state.home){
+                params['home']=1;
+            }else{
+                params['home']=0;
+            }
         }
 
-         //If extra parameters required
+
+        var urlTarget;
+
+        // if image add params temporal url
+        if(this.state.targetImage){
+            var targetImage = this.state.targetImage;
+             urlTarget = targetImage.url;
+             params[targetImage.paramsName] = urlTarget;
+        }
+
+
+        
+        //If extra parameters required
         if(this.state.required){
             var requiredList = this.state.required;
             for(var i=0;i<requiredList.length;i++){
@@ -118,22 +114,85 @@ class CreateParams extends Component{
             }
         }
 
-        console.log("PARAMS: ",params);
-
+        console.log("Creating params: ",params);        
+        
         // create element in bd
-        axios.post('http://me-do.cl/backend/api/' + this.state.url, params).then(res => {
+        //var urlServer = "http://me-do.cl/backend/";
+        var urlServer = "http://localhost:3001/";
+
+        console.log(urlServer  + this.state.url);
+
+        axios.post(urlServer  + "api/"+ this.state.url, params).then(res => {
             console.log("result ",res);
-            this.setState({showConfirm:true});
-            window.location.reload(); 
-        }).catch(error => {
-            console.log(error);
-            this.setState({showError:true});
-          return Promise.reject(error);
-      });
+
+            var name = res.data.id.toString()
+            params['id'] = res.data.id;
+
+            var urlpath = urlTarget + name
+
+            if(this.state.targetImage){  
+                params[this.state.targetImage.paramsName] = urlpath + ".png";
+            }
+            
+            //updateing url with id
+            var listRequest = [axios.patch(urlServer  + "api/"+ this.state.url, params)]; 
+
+            console.log(urlpath);
+
+            //If image in form
+            if(this.state.targetImage){
+                
+                console.log("target image before update",urlpath);
+
+
+                //Create image
+                const fd = new FormData();
+                fd.append('image',this.state.file, this.state.file.name);
+                fd.set('url', params[this.state.targetImage.paramsName] );
+                var config = { headers: { 'Content-Type': 'multipart/form-data' } };
+                
+                console.log(params[this.state.targetImage.paramsName]);
+                listRequest.push(axios.post(urlServer + "upload",fd,config));
+
+                //Create folder just targetimage.folder
+                if(this.state.targetImage.folder){
+                    config = {'content-type': 'application/json'};
+                    listRequest.push(axios.post( urlServer + "createFolder",{url:urlpath},config));
+                }
+
+                
+            }
+
+            console.log(listRequest);
+
+            
+            //then all request save results in state
+            Promise.all(listRequest).then((results) => {
+                console.log(results);
+                this.setState({showConfirm:true});
+                window.location.reload(); 
+             }).catch(function(error){
+				this.setState({showError:true});
+				console.log("ERROR",error);
+				console.log("ERROR resp",error.response);
+				console.log("ERROR request",error.request);
+			});
+
+            
+
+           
+
+
+        }).catch(function(error){
+            console.log("ERROR 1 ",error);
+            console.log("ERROR 1",error.response);
+            console.log("ERROR 1",error.request);
+        });
+      
     }
 
     hideAlert(){
-        this.setState({showError:false,showConfirm:false,showInvalid:false});
+        this.setState({showError:false,showConfirm:false,showInvalid:false,showCheck:false});
     }
 	
         
@@ -145,18 +204,55 @@ class CreateParams extends Component{
             var imageForm;
 
             var listForms = keys.map((element,i) => {
+                var formText;
+                if(element.indexOf("description") != -1 ||  element.indexOf("text") != -1){
+                    formText =  <Form.Control  as="textarea" rows="2"
+                    onChange = {(event) => {
+                        params[element] = event.target.value;
+                        this.setState({params:params});
+                    }}  
+                    />
+                }else if(element == 'active'){
+                    formText =   
+                            <div 
+                                key={element}  
+                                onChange = {(event) => {this.setState({active:!this.state.active});}}      
+                                className="mb-3">
+                                    <Form.Check 
+                                        type={'checkbox'}
+                                        id={element}
+                                        label={ forms[element]}
+                                    />
+                             </div>
+                                                
+
+                }else if(element == 'home'){
+                    formText =   
+                    <div 
+                        key={element}  
+                        onChange = {(event) => {this.setState({home:!this.state.home});}}    
+                        className="mb-3">
+                            <Form.Check 
+                                type={'checkbox'}
+                                id={element}
+                                label={ forms[element]}
+                            />
+                     </div>
+                }else{
+                    formText =  <Form.Control 
+                    onChange = {(event) => {
+                        params[element] = event.target.value;
+                        this.setState({params:params});
+                    }}  
+                    />
+                }
                 return( 
                     <Form.Group as={Row} controlId="formPlaintextEmail">
                         <Form.Label column sm="2">
                             {forms[element]}
                         </Form.Label>
                         <Col sm="10">
-                            <Form.Control 
-                                onChange = {(event) => {
-                                    params[element] = event.target.value;
-                                    this.setState({params:params});
-                                }}  
-                                 />
+                           {formText}
                         </Col>
                     </Form.Group>
                     
@@ -204,11 +300,11 @@ class CreateParams extends Component{
                                     </Col>
                                     <Col sm="10">
                                         <div className="custom-file">
-                                                    <label className="custom-file-label" for="validatedCustomFile"> {this.state.name} </label>
-                                                    <input type="file" className="custom-file-input" id="validatedCustomFile" onChange={ this.handleChange} required/>
-                                                    <div className="invalid-feedback"> Archivo incorrecto </div>    
+                                            <label className="custom-file-label" for="validatedCustomFile"> {this.state.name} </label>
+                                            <input type="file" className="custom-file-input" id="validatedCustomFile" onChange={ this.handleChange} required/>
+                                            <div className="invalid-feedback"> Archivo incorrecto </div>    
                                         </div> 
-                                        <br/>      <br/>  
+                                        <br/> <br/>  
                                     </Col>
                                     
                                 </Row>
@@ -250,6 +346,14 @@ class CreateParams extends Component{
                         onConfirm={this.hideAlert} 
                         closeOnClickOutside={true}>
 							El tipo archivo debe ser ".png" o ".jpg".
+                    </SweetAlert>
+                    <SweetAlert 
+                        show={this.state.showCheck } 
+                        warning
+                        title="" 
+                        onConfirm={this.hideAlert} 
+                        closeOnClickOutside={true}>
+							El atributo "{this.state.checkParameter}"" no puede estar vacio
                     </SweetAlert>
             </Form>
             
