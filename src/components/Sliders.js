@@ -23,9 +23,11 @@ class Sliders extends Component{
             console.log(results);
             this.setState({sliders:results[0]['data'].reverse(),load:false });
           })
-          .catch(error => {
-              console.log(error);
-            return Promise.reject(error);
+          .catch(function(error){
+            this.setState({showError:true});
+            console.log("ERROR ",error);
+            console.log("ERROR resp ",error.response);
+            console.log("ERROR request ",error.request);
         });
 
 	}
@@ -120,7 +122,7 @@ class Sliders extends Component{
                                         
                                         <Card.Header>{element.slug} </Card.Header>
                                         <Card.Body>
-                                            <Image size={"400"} getUrl={urlserver   + element.image} uploadUrl={element.image }   />
+                                            <Image size={"200"} getUrl={urlserver   + element.image} uploadUrl={element.image }   />
                                         </Card.Body>
                                     </Card>
                                     <br/>

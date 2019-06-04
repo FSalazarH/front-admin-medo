@@ -91,15 +91,17 @@ class UpdateParams extends Component{
         }
 
         console.log("params ",params);
+        console.log('URL: http://me-do.cl/backend/api/' + this.props.url);
         axios.patch('http://me-do.cl/backend/api/' + this.props.url, params).then(res => {
             console.log("result ",res);
             //alert("Cambios guardados correctamente");
             this.setState({show:true});
-        }) .catch(error => {
-            console.log(error);
+        }).catch(function(error){
             this.setState({showError:true});
-          return Promise.reject(error);
-      });
+            console.log("ERROR ",error);
+            console.log("ERROR resp ",error.response);
+            console.log("ERROR request ",error.request);
+        });
       
     }
 
