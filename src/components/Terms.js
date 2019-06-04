@@ -152,7 +152,7 @@ class Terms extends Component{
                                 </Breadcrumb>
                             </Col> 
                             <Col  xs={4} md={4} lg={4}>  
-                                <Button  onClick={this.handleShow2} variant="outline-success" size="lg"> <i className="fas fa-plus-circle "></i> Crear Slider</Button>
+                                <Button  onClick={this.handleShow2} variant="outline-success" size="lg"> <i className="fas fa-plus-circle "></i> Crear Elemento</Button>
                             </Col> 
                         </Row>
                         <Row>

@@ -17,7 +17,7 @@ class Sliders extends Component{
         
         var urlServer = "http://me-do.cl/backend/";
         //var urlServer = "http://localhost:3001/";
-        var config = { headers: { 'Access-Control-Allow-Methods':'*','Content-Type': 'application/json' } }
+        //var config = { headers: { 'Access-Control-Allow-Methods':'*','Content-Type': 'application/json' } }
         var slidersRequest  =   axios.get( urlServer+'api/slider_images');
         
         //then all request save results in state

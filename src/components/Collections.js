@@ -23,10 +23,10 @@ class Collections extends Component{
                 console.log(results);
                 this.setState({collections:results[0]['data'].reverse(),designers:results[1]['data'].reverse(),load:false });
              }).catch(function(error){
-				this.setState({showError:true});
 				console.log("ERROR",error);
 				console.log("ERROR",error.response);
-				console.log("ERROR",error.request);
+                console.log("ERROR",error.request);
+                this.setState({showError:true});
 			});
 
         }

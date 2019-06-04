@@ -1,5 +1,5 @@
 import React, {Component } from 'react';
-import {Fade, Button } from 'react-bootstrap';
+import {Image } from 'react-bootstrap';
 
 
 class SideNav extends Component{
@@ -11,7 +11,7 @@ class SideNav extends Component{
 		super(props, context);
 		this.state = {
 			route: window.location.href.split("/")[3],
-			views:{"Home":"Inicio","Collections":"Collecciones","Designers":"Diseñadores","Base":"Base","About":"Acerca de Nosotros","Freq":"Preguntas frecuentes","Service":"Servicio al cliente","Terms":"Terminos y condiciones","Contact":"Contact"}
+			views:{"Home":"Inicio","Collections":"Collecciones","Designers":"Diseñadores","Base":"Base","About":"Acerca de Nosotros","Freq":"Preguntas frecuentes","Service":"Servicio al cliente","Terms":"Terminos y condiciones","Contact":"Contact","Order":"Ordenes de compra"}
 		};
 	  }
 
@@ -51,7 +51,7 @@ class SideNav extends Component{
 
 					<nav id="sidebar">
 						<div className="sidebar-header">
-							<h3>me do</h3>
+						<Image src="https://me-do.cl/static/imagenes/iconos/logo.png" fluid rounded />
 							{/* <img  src= {window.location.origin + '/img/logo.png'}  className="responsive-img"/> */}
 						</div>
 						<ul className="list-unstyled components">
