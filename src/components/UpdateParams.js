@@ -90,11 +90,11 @@ class UpdateParams extends Component{
             }
         }
 
-        console.log("params CHANGES",params);
+        console.log("params changes 2",params);
         console.log('URL: http://me-do.cl/backend/api/' + this.props.url);
 
-        //var config = { headers: { 'Access-Control-Allow-Methods':'*','Content-Type': 'application/json' } }
-        var config = { headers: {'Content-Type': 'application/json' } }
+        var config = { headers: { 'Access-Control-Allow-Methods':'*','Content-Type': 'application/json' } }
+        //var config = { headers: {'Content-Type': 'application/json' } }
         axios.patch('http://me-do.cl/backend/api/' + this.props.url, params,config).then(res => {
             console.log("result ",res);
             //alert("Cambios guardados correctamente");
