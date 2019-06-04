@@ -26,7 +26,7 @@ class About extends Component{
           .catch(function(error){
             this.setState({showError:true});
             console.log("ERROR ",error);
-            console.log("ERROR resp ",error.response);
+            console.log("ERROR response ",error.response);
             console.log("ERROR request ",error.request);
         });
 
