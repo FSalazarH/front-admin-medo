@@ -117,8 +117,8 @@ class CreateParams extends Component{
         console.log("Creating params: ",params);        
         
         // create element in bd
-        //var urlServer = "http://me-do.cl/backend/";
-        var urlServer = "http://localhost:3001/";
+        var urlServer = "http://me-do.cl/backend/";
+        //var urlServer = "http://localhost:3001/";
 
         console.log(urlServer  + this.state.url);
 
