@@ -90,7 +90,7 @@ class UpdateParams extends Component{
             }
         }
 
-        console.log("params ",params);
+        console.log("params CHANGES",params);
         console.log('URL: http://me-do.cl/backend/api/' + this.props.url);
 
         //var config = { headers: { 'Access-Control-Allow-Methods':'*','Content-Type': 'application/json' } }
