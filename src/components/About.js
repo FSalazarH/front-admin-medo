@@ -39,45 +39,17 @@ class About extends Component{
             texts:[],
             load: true,
             handleClose:false,
-            forms:{"text_en":"Texto EN","text_es":"Texto ES","text_it":"Texto IT"},
             params:{},
             target:0,
             showError:false,showConfirm:false
         };
 
-
-        this.delete = this.delete.bind(this);
         this.hideAlert= this.hideAlert.bind(this);
     }
 
 
-    delete(){
-        console.log("deleting!");
-
-        var listRequest = [];
-        console.log(this.state);
-        var id = this.state.images[this.state.target].id;
-        var urlServer = "http://me-do.cl/backend/";
-        //var urlServer = "http://localhost:3001/";
-
-        var config = {'content-type': 'application/json'};
-        listRequest.push(axios.delete(urlServer + "api/slider_images/"+ id.toString(), { data: {} }));
-        listRequest.push(axios.post(urlServer+ "deleteFolder",{url: this.state.images[this.state.target].image},config));
-       
-        console.log(listRequest);
-        Promise.all(listRequest).then((res) => {
-            console.log("result ",res);
-            this.setState({showConfirm:true});
-            window.location.reload(); 
-
-         }).catch(() => { console.log('failed!'); this.setState({showError:true}); });      
-
-
-       
-    }
-
     hideAlert(){
-        this.setState({showDelete:false,showError:false,showConfirm:false});
+        this.setState({showError:false,showConfirm:false});
     }
 
     render(){
@@ -87,21 +59,34 @@ class About extends Component{
 
 		}else{
 
-            var required = [{'name':'slider_id','parameter':0}];
 
+            var data = [];
+            var texts = this.state.texts;
+
+
+            var forms = [[4792,4793,4794,4795],[4796,4797],[4798,4799,4809] ];
+            for(var i=0;i<forms.length ;i++){
+                var d = []
+                for(var j=0;j<texts.length ;j++){
+                    if ( forms[i].indexOf(texts[j].id) >= 0){
+                        d.push(texts[j]);
+                    }
+                }
+                data.push(d);
+               
+            }
+
+            console.log("DATA ",data);
             var listAbout = this.state.images.map((element,i) => {
 
-                var params = element;
                 //var urlserver = "http://localhost:8080";
                 var urlserver = "https://me-do.cl/";
-               
 
                 return( 
                         <Col key={i} xs={12} md={12} lg={12}>
                             <Row>
                                 <Col  xs={4} md={4} lg={4}>
                                     <Card>
-                                        
                                         <Card.Header>{element.key} </Card.Header>
                                         <Card.Body>
                                             <Image size={"200"} getUrl={urlserver   + element.route} uploadUrl={element.route }   />
@@ -111,7 +96,7 @@ class About extends Component{
                             
                                 <Col xs={6} md={6} lg={6}>
                                     <br/>  
-                                    <FormTable data={this.state.texts.slice(0,5)}/>
+                                    <FormTable data={data[i]}/>
                                     
                                 </Col>
                             </Row>

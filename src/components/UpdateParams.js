@@ -94,6 +94,7 @@ class UpdateParams extends Component{
         console.log('URL: http://me-do.cl/backend/api/' + this.props.url);
 
         var config = { headers: { 'Access-Control-Allow-Methods':'*','Content-Type': 'application/json' } }
+        
         //var config = { headers: {'Content-Type': 'application/json' } }
         axios.patch('http://me-do.cl/backend/api/' + this.props.url, params,config).then(res => {
             console.log("result ",res);
