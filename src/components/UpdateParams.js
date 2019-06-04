@@ -93,8 +93,8 @@ class UpdateParams extends Component{
         console.log("params ",params);
         console.log('URL: http://me-do.cl/backend/api/' + this.props.url);
 
-        //var config = { headers: {'Access-Control-Allow-Origin':'http://me-do.cl','Content-Type': 'multipart/form-data' } }
-        axios.patch('http://me-do.cl/backend/api/' + this.props.url, params).then(res => {
+        var config = { headers: { 'Access-Control-Allow-Methods':'*','Content-Type': 'application/json' } }
+        axios.patch('http://me-do.cl/backend/api/' + this.props.url, params,config).then(res => {
             console.log("result ",res);
             //alert("Cambios guardados correctamente");
             this.setState({show:true});
@@ -104,6 +104,7 @@ class UpdateParams extends Component{
             console.log("ERROR request ",error.request);
             this.setState({showError:true});
         });
+
       
     }
 
