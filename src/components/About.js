@@ -3,9 +3,8 @@ import {Spinner, Breadcrumb ,Modal,Container, ButtonGroup, Button, Row, Col, Car
 import SideBar from './SideBar';
 import axios from 'axios';
 import Image from './Image';
-import UpdateParams from './UpdateParams';
-import CreateParams from './CreateParams';
 import SweetAlert from "react-bootstrap-sweetalert";
+import FormTable from './FormTable';
 
 class About extends Component{
 
@@ -13,8 +12,6 @@ class About extends Component{
 	componentDidMount(){
 
 		// check if user logged in
-
-        
         var urlServer = "http://me-do.cl/backend/";
         //var urlServer = "http://localhost:3001/";
         //var config = { headers: { 'Access-Control-Allow-Methods':'*','Content-Type': 'application/json' } }
@@ -22,9 +19,9 @@ class About extends Component{
         var imagesRequest = axios.get( urlServer+'api/images?filter[where][view]=about');
 
         //then all request save results in state
-         Promise.all([imagesRequest]).then((results) => {
+         Promise.all([imagesRequest,textRequest]).then((results) => {
             console.log(results);
-            this.setState({images:results[0]['data'].reverse(),load:false });
+            this.setState({images:results[0]['data'],texts:results[1]['data'],load:false });
           })
           .catch(function(error){
             this.setState({showError:true});
@@ -39,39 +36,21 @@ class About extends Component{
 		super(props);
 		this.state = {
             images:[],
+            texts:[],
             load: true,
-            show:false,
-            show2:false,
             handleClose:false,
             forms:{"text_en":"Texto EN","text_es":"Texto ES","text_it":"Texto IT"},
             params:{},
             target:0,
-            showDelete:false,showError:false,showConfirm:false
+            showError:false,showConfirm:false
         };
-        this.handleShow = this.handleShow.bind(this);
-        this.handleShow2 = this.handleShow2.bind(this);
-        this.handleClose = this.handleClose.bind(this);
-        this.handleClose2 = this.handleClose2.bind(this);
-        this.handleParams = this.handleParams.bind(this);
-        this.saveChanges = this.saveChanges.bind(this);
+
 
         this.delete = this.delete.bind(this);
         this.hideAlert= this.hideAlert.bind(this);
     }
 
-    handleClose(){this.setState({ show: false });}
-    handleShow(){this.setState({ show: true });}
-    handleClose2(){this.setState({ show2: false });}
-    handleShow2() {this.setState({ show2: true });}
-    
-    handleParams(){
-        var t = this.state.target;
-        this.setState({params:this.state.images[t]});
-        this.handleShow()
-    }
-    saveChanges(){
-        this.handleClose();
-    }
+
     delete(){
         console.log("deleting!");
 
@@ -118,33 +97,21 @@ class About extends Component{
                
 
                 return( 
-                        <Col key={i} xs={12} md={6} lg={6}>
+                        <Col key={i} xs={12} md={12} lg={12}>
                             <Row>
-                                <Col  xs={8} md={8} lg={8}>
+                                <Col  xs={4} md={4} lg={4}>
                                     <Card>
                                         
-                                        <Card.Header>{element.slug} </Card.Header>
+                                        <Card.Header>{element.key} </Card.Header>
                                         <Card.Body>
-                                            <Image size={"200"} getUrl={urlserver   + element.image} uploadUrl={element.image }   />
+                                            <Image size={"200"} getUrl={urlserver   + element.route} uploadUrl={element.route }   />
                                         </Card.Body>
                                     </Card>
-                                    <br/>
                                 </Col  >
                             
-                                <Col xs={4} md={4} lg={4}>
-                                    <br/>   <br/>   
-                                    <ButtonGroup vertical>
-                                        <Button variant="outline-primary" 
-                                                onClick={() => { 
-                                                    this.setState({target:i},function() {this.handleParams()}  ) ; 
-                                                }}
-                                        
-                                        > <i className="fas fa-edit"></i> Editar </Button>
-                                        <Button variant="outline-danger"  
-                                                         onClick={() => { this.setState({target:i},function() {this.setState({showDelete:true})}  ) ;}}
-                                                    > <i className="fas fa-trash"></i>   Eliminar </Button>
-                                    </ButtonGroup>
-                                    <br/>   
+                                <Col xs={6} md={6} lg={6}>
+                                    <br/>  
+                                    <FormTable data={this.state.texts.slice(0,5)}/>
                                     
                                 </Col>
                             </Row>
@@ -158,58 +125,11 @@ class About extends Component{
                     <Container> 
 
                         <br/>
-                        <Row >
-                            <Col  xs={8} md={8} lg={8}> 
-                                <Breadcrumb>
-                                <Breadcrumb.Item active> Inicio </Breadcrumb.Item>
-                                </Breadcrumb>
-                            </Col> 
-                            <Col  xs={4} md={4} lg={4}>  
-                                <Button  onClick={this.handleShow2} variant="outline-success" size="lg"> <i className="fas fa-plus-circle "></i> Crear Slider</Button>
-                            </Col> 
-                        </Row>
                         <Row>
                             {listAbout}
                         </Row>
 
                     </Container> 
-
-                    {/* Modal edit Slider  */}
-                    <Modal  size="lg" show={this.state.show} onHide={this.handleClose}>
-                        <Modal.Header closeButton>
-                            <Modal.Title> Editar Collección </Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <UpdateParams url="slider_images"  params={this.state.params} forms={this.state.forms} check={["text_en","text_es","text_it"]} />
-                        </Modal.Body>
-                       
-                    </Modal>
-
-                    {/* Modal create Slider  */}
-                    <Modal  size="lg" show={this.state.show2} onHide={this.handleClose2}>
-                        <Modal.Header closeButton>
-                            <Modal.Title> Crear Collección </Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <CreateParams url="slider_images" required={required} targetImage={{"name":"id","paramsName":"image","url":"/static/imagenes/home/"}} check={["text_en","text_es","text_it"]} name="Slider" forms={this.state.forms} />
-                        </Modal.Body> 
-                       
-                    </Modal>
-
-                     {/* Sweet alert confirm delete:  */}
-                     <SweetAlert 
-                        warning
-                        showCancel
-                        confirmBtnText="Si, borralo!"
-                        confirmBtnBsStyle="danger"
-                        cancelBtnBsStyle="default"
-                        title="Estas seguro?"
-                        onConfirm={this.delete}
-                        onCancel={this.hideAlert}
-                        show={this.state.showDelete}
-                    >
-                        Una vez borrado no podras recuperar el slider.
-                    </SweetAlert>
 
                     {/* Sweet alert success changes  */}
                     <SweetAlert 

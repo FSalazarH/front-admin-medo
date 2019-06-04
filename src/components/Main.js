@@ -13,6 +13,7 @@ import Designers from './Designers';
 import Terms from './Terms';
 import Freq from './Freq';
 import Order from './Order';
+import About from './About';
 import '.././App.css'; 
 
 
@@ -35,8 +36,8 @@ const Main = () => (
 					<Route exact path="/Terms" component={Terms} />
 					<Route exact path="/Freq" component={Freq} />
 					<Route exact path="/Order" component={Order} />
+					<Route exact path="/About" component={About} />
 
-					<Route exact path="/about" render={() => (<Redirect to="/About/text"/>)} />
 					<Route exact path="/service" render={() => (<Redirect to="/Service/text"/>)} />
 					<Route exact path="/contact" render={() => (<Redirect to="/Contact/text"/>)} />
 					<Route exact path="/base" render={() => (<Redirect to="/Base/text"/>)} />
