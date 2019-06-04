@@ -67,7 +67,7 @@ class Login extends Component{
             <div style={{'width': '400px',
                 'margin': '100px auto'}}>
                 <form action="">
-                    <h2 className="text-center"> Inicio de Sesión <br/> <br/> </h2>       
+                    <h2 className="text-center"> Inicio de Sesión ME-DO <br/> <br/> </h2>       
                     <div className="form-group">
                         <input type="text" className="form-control" placeholder="E-mail" required="required"
                         onChange = {(event) => {
