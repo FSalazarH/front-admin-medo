@@ -92,7 +92,8 @@ class UpdateParams extends Component{
 
         console.log("params ",params);
         console.log('URL: http://me-do.cl/backend/api/' + this.props.url);
-        
+
+        //var config = { headers: {'Access-Control-Allow-Origin':'http://me-do.cl','Content-Type': 'multipart/form-data' } }
         axios.patch('http://me-do.cl/backend/api/' + this.props.url, params).then(res => {
             console.log("result ",res);
             //alert("Cambios guardados correctamente");

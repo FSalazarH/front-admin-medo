@@ -164,7 +164,7 @@ class Designers extends Component{
                                 <Modal.Title> Editar Diseñador </Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                <UpdateParams  url="designers" params={this.state.params} forms={this.state.forms}  />
+                                <UpdateParams  url="designers" check={['name','web','description']} params={this.state.params} forms={this.state.forms}  />
                             </Modal.Body>
                            
                         </Modal>

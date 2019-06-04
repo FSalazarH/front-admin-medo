@@ -14,8 +14,10 @@ class Sliders extends Component{
 
 		// check if user logged in
 
+        
         var urlServer = "http://me-do.cl/backend/";
         //var urlServer = "http://localhost:3001/";
+        var config = { headers: { 'Access-Control-Allow-Methods':'*','Content-Type': 'multipart/form-data' } }
         var slidersRequest  =   axios.get( urlServer+'api/slider_images');
         
         //then all request save results in state
