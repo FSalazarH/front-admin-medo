@@ -1,5 +1,7 @@
 import React, {Component } from 'react';
 import SweetAlert from "react-bootstrap-sweetalert";
+import axios from "axios";
+
 
 class Login extends Component{
 
@@ -17,40 +19,29 @@ class Login extends Component{
 
     handleClick(event) {
     //fetch("http://me-do.cl/backend/api/administrators/login?[include]=user",
-    fetch("http://me-do.cl/backend/api/administrators/login?[include]=user",
-			{
-			    method: "POST",
-			    body: JSON.stringify(this.state),
-			     headers:{
-				    'Content-Type': 'application/json'
-				  }
-			}
-		)
-        .then(response => response.json())
-		.then(parsedJson => {
-            console.log(parsedJson['id']);
-			if(parsedJson['id']){
+
+        var data = {email:this.state.email,password:this.state.password};
+        console.log("DATA: ",data);
+        axios.post("http://me-do.cl/backend/api/administrators/login?[include]=user", data).then(parsedJson=> {
+            console.log("aqui ",parsedJson);
+            if(parsedJson['id']){
                 console.log("logeado",parsedJson);
 				var data={
 					"token":parsedJson['id'],
 					"user":parsedJson['user']
 				}
-				sessionStorage.setItem('getData', JSON.stringify(data)); 
-                
-                
+                sessionStorage.setItem('getData', JSON.stringify(data)); 
 				this.props.history.push('text/Home');
 			}else{
 				console.log("no logeado?");
 				this.setState({showInvalid:true});
-
-
 			}
-			
 
-			} 
-		)
-		.catch(error => 	this.setState({showError:true}) ); 
-		console.log("asd");
+        }).catch(function(error){
+            console.log("ERROR 1 ",error);
+            console.log("ERROR 1",error.response);
+            console.log("ERROR 1",error.request);
+        });
     }
 
     
