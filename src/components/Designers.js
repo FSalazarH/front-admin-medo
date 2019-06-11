@@ -34,7 +34,7 @@ class Designers extends Component{
 			target:0,
 			params:{},
 			forms:{"name":"Nombre","alias":"alias","description_en":"descripción EN",
-			"description_es":"descripción ES","description_it":"descripción IT","pais":"Pais","web":"Página web"},
+			"description_es":"descripción ES","description_it":"descripción IT","pais":"Pais","web":"Página web", "video":"Video"},
 			showDelete:false,showError:false,showConfirm:false
 		}
 
