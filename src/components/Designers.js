@@ -14,9 +14,11 @@ class Designers extends Component{
 		axios.get(urlServer + 'api/designers').then(res => {
 			this.setState({designers:res.data.reverse(),load:false})
 			console.log(res);
-		}) .catch(error => {
-			  console.log(error);
-			return Promise.reject(error);
+		}).catch(function(error){
+			console.log("ERROR",error);
+			console.log("ERROR",error.response);
+			console.log("ERROR",error.request);
+			this.setState({showError:true});
 		});
 		
 
@@ -31,7 +33,8 @@ class Designers extends Component{
 			show2:false,
 			target:0,
 			params:{},
-			forms:{"name":"Nombre","pais":"Pais","web":"Página web", "description":"descripción"},
+			forms:{"name":"Nombre","alias":"alias","description_en":"descripción EN",
+			"description_es":"descripción ES","description_it":"descripción IT","pais":"Pais","web":"Página web"},
 			showDelete:false,showError:false,showConfirm:false
 		}
 
@@ -164,7 +167,7 @@ class Designers extends Component{
                                 <Modal.Title> Editar Diseñador </Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                <UpdateParams  url="designers" check={['name','web','description']} params={this.state.params} forms={this.state.forms}  />
+                                <UpdateParams  url="designers" check={['name','web']} params={this.state.params} forms={this.state.forms}  />
                             </Modal.Body>
                            
                         </Modal>
@@ -175,7 +178,7 @@ class Designers extends Component{
                                 <Modal.Title> Crear Diseñador </Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-								<CreateParams url="designers" check={['name','web','description']} targetImage={{name:"id",url:"static/imagenes/designers/",paramsName:"image"}} name="Diseñador" image={true} forms={this.state.forms} />
+								<CreateParams url="designers" check={['name','web']} targetImage={{name:"id",url:"static/imagenes/designers/",paramsName:"image"}} name="Diseñador" image={true} forms={this.state.forms} />
                             </Modal.Body>
                            
                         </Modal>
