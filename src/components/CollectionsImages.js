@@ -140,7 +140,7 @@ class CollectionsImages extends Component{
                 var urlTarget = "/media/images/collections/" + this.state.collectionsId + "/";
 
                 return(	<div className="wrapper">
-                            <SideBar/>
+                            <SideBar  history={this.props.history}/>
                             <Container> 
                                 <br/>
                                 <Row >

@@ -165,7 +165,7 @@ class Collections extends Component{
 
                 return(	
                     <div className="wrapper">
-                        <SideBar/>
+                        <SideBar  history={this.props.history}/>
                         <Container> 
 
                             <br/>

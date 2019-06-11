@@ -83,7 +83,7 @@ class Images extends Component{
 
 				<div className="wrapper">
 
-					<SideBar/>
+					<SideBar  history={this.props.history}/>
                     <Container>
                     <br/>
 						<Breadcrumb>

@@ -1,12 +1,27 @@
 import React, {Component } from 'react';
 import {Image } from 'react-bootstrap';
-
+import axios from 'axios';
 
 class SideNav extends Component{
-
 	
-	componentWillMount(){
+    componentDidMount(){
+        var data = JSON.parse(sessionStorage.getItem('getData')); 
+        if(data){
+            axios.get("http://me-do.cl/backend/api/administrators/"+ data['user']['id'] + "?access_token=" + data['token']).then(parsedJson=> {
+                console.log("Usuario logeado",parsedJson);
+                
+            }).catch(function(error){
+                console.log("ERROR 1 ",error);
+                console.log("ERROR 1",error.response);
+                console.log("ERROR 1",error.request);
+				this.props.history.push('/');
+            });
+
+		}else{
+            this.props.history.push('/');
+        }
 	}
+
 	constructor(props, context) {
 		super(props, context);
 		this.state = {
